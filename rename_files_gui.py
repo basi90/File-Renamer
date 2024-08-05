@@ -12,7 +12,7 @@ def rename_files(directory):
     logging.info(f"Renaming files in directory: {directory}")
     files = sorted(os.listdir(directory))
     logging.debug(f"Original files: {files}")
-    num_pattern = re.compile(r"^(\d+)\.")
+    num_pattern = re.compile(r"^(\d+)\. ")
     files_with_nums = sorted([(file, int(num_pattern.search(file).group(1))) for file in files if num_pattern.search(file)], key=lambda x: x[1])
     logging.debug(f"Files with numbers: {files_with_nums}")
 
@@ -29,7 +29,7 @@ def rename_files(directory):
     # Rename temporary files to final names
     for temp_name, original_name in temp_files.items():
         new_num = int(re.search(r"temp_(\d+)_", temp_name).group(1))
-        final_name = f"{new_num}. {original_name.split(' ', 1)[1]}"
+        final_name = f"{new_num}. {original_name.split('. ', 1)[1]}"
         os.rename(os.path.join(directory, temp_name), os.path.join(directory, final_name))
         logging.info(f"Renamed {temp_name} to {final_name}")
 
@@ -37,7 +37,7 @@ def insert_file(directory, new_file_path, position):
     logging.info(f"Inserting file: {new_file_path} at position: {position} in directory: {directory}")
     files = sorted(os.listdir(directory))
     logging.debug(f"Current files: {files}")
-    num_pattern = re.compile(r"^(\d+)\.")
+    num_pattern = re.compile(r"^(\d+)\. ")
     files_with_nums = sorted([(file, int(num_pattern.search(file).group(1))) for file in files if num_pattern.search(file)], key=lambda x: x[1])
     logging.debug(f"Files with numbers: {files_with_nums}")
 
@@ -61,7 +61,7 @@ def insert_file(directory, new_file_path, position):
     # Rename temporary files to final names
     for i in range(position, len(files_with_nums) + 1):
         temp_name = f"temp_{i + 1}_{files_with_nums[i - 1][0]}"
-        final_name = f"{i + 1}. {files_with_nums[i - 1][0].split(' ', 1)[1]}"
+        final_name = f"{i + 1}. {files_with_nums[i - 1][0].split('. ', 1)[1]}"
         if os.path.exists(os.path.join(directory, temp_name)):
             os.rename(os.path.join(directory, temp_name), os.path.join(directory, final_name))
             logging.info(f"Renamed {temp_name} to {final_name}")
@@ -79,7 +79,7 @@ def run_script():
             return
 
         files = sorted(os.listdir(directory))
-        num_pattern = re.compile(r"^(\d+)\.")
+        num_pattern = re.compile(r"^(\d+)\. ")
         files_with_nums = sorted([(file, int(num_pattern.search(file).group(1))) for file in files if num_pattern.search(file)], key=lambda x: x[1])
 
         position = simpledialog.askinteger("Input", "Enter the position to insert the new file:", minvalue=1, maxvalue=len(files_with_nums) + 1)
